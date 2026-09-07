@@ -15,12 +15,16 @@ public class VideoSource
     public VideoSource(string fileName)
     {
         if (string.IsNullOrWhiteSpace(fileName))
+        {
             throw new InvalidVideoSourceException("File name cannot be empty.");
+        }
 
         FileName = fileName;
         Extension = Path.GetExtension(fileName);
 
         if (!AllowedExtensions.Contains(Extension))
+        {
             throw new InvalidVideoSourceException($"Unsupported file format '{Extension}'.");
+        }
     }
 }

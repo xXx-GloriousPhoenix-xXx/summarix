@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Summarix.Application.DTOs;
 using Summarix.Application.Interfaces;
+using Summarix.Presentation.Contracts;
 
 namespace Summarix.Presentation.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/summary")]
 public class SummaryController(ISummaryService summaryService) : ControllerBase
 {
     private readonly ISummaryService _summaryService = summaryService;
@@ -15,30 +16,29 @@ public class SummaryController(ISummaryService summaryService) : ControllerBase
     [ProducesResponseType(typeof(FileStreamResult), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> GenerateSummaryPdfAsync(
-        [FromForm] IFormFile file,
-        [FromQuery] string? language = "en",
+        [FromForm] GenerateSummaryRequest request,
         CancellationToken cancellationToken = default)
     {
-        if (file.Length == 0)
+        if (request.File.Length == 0)
         {
             return BadRequest("A valid video file is required.");
         }
 
-        await using var videoStream = file.OpenReadStream();
+        await using var videoStream = request.File.OpenReadStream();
 
-        var request = new SummaryRequestDto(
+        var serviceRequest = new SummaryRequestDto(
             VideoStream: videoStream,
-            FileName: file.FileName,
-            ContentType: file.ContentType,
-            TargetLanguage: language
+            FileName: request.File.FileName,
+            ContentType: request.File.ContentType,
+            TargetLanguage: request.Language
         );
 
-        var pdfResult = await this._summaryService.GetSummaryFromVideoAsync(request, cancellationToken);
+        var pdfResult = await _summaryService.GetSummaryFromVideoAsync(serviceRequest, cancellationToken);
 
         return File(
             fileStream: pdfResult.PdfStream,
             contentType: "application/pdf",
-            fileDownloadName: $"{Path.GetFileNameWithoutExtension(file.FileName)}_summary.pdf"
+            fileDownloadName: $"{Path.GetFileNameWithoutExtension(request.File.FileName)}_summary.pdf"
         );
     }
 }
