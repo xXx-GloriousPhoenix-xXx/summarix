@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="Summarix.Application/Summarix.Application.csproj" Id="c1141b40-9d26-4db1-bd92-57719fbded43" />
+  <Project Path="Summarix.Domain/Summarix.Domain.csproj" Id="5ef4ae79-5911-4277-a257-6084ddfda678" />
+  <Project Path="Summarix.Infrastructure/Summarix.Infrastructure.csproj" Id="53ead138-d05a-4135-974b-6b11d8aa00df" />
+  <Project Path="Summarix.Presentation/Summarix.Presentation.csproj" Id="d772049a-f63f-4147-baff-0b1baecd5564" />
+</Solution>
