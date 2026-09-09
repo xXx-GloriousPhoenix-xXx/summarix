@@ -1,24 +1,47 @@
 @use "sass:color";
 
-$pastel-pink: #fadadd;
-$pastel-coral: #ffb7b2;
-$pastel-peach: #ffdac1;
-$pastel-yellow: #fffacd;
-$pastel-mint: #b2e4d8;
-$pastel-sage: #c7e5c4;
-$pastel-sky: #a1caf1;
-$pastel-lavender: #e6e6fa;
-$pastel-mauve: #dabfd6;
-$pastel-cream: #fffdd0;
-$pastel-slate: #aec6cf;
+$dark-pink:     #4d2936;
+$dark-coral:    #5c3230;
+$dark-peach:    #543d31;
+$dark-yellow:   #4e462b;
+$dark-mint:     #1d3d37;
+$dark-sage:     #283d2a;
+$dark-sky:      #2b4353;
+$dark-lavender: #3b364c;
+$dark-mauve:    #443144;
+$dark-slate:    #2c3944;
 
-$color-bg: $pastel-cream;
-$color-surface: #ffffff;
-$color-primary: $pastel-sky;
-$color-primary-hover: color.adjust($pastel-sky, $lightness: -8%);
-$color-secondary: $pastel-lavender;
-$color-accent: $pastel-peach;
-$color-success: $pastel-sage;
+$color-bg:            #12151a; // Глубокий тёмный фон
+$color-surface:       #1a1f26; // Карточки, контейнеры, drop-area
+$color-surface-hover: #222933; // Состояние наведения на область
 
-$color-text-main: #2c3e50;
-$color-text-muted: #6c7a89;
+$color-primary:       $dark-sky;
+$color-primary-hover: color.adjust($dark-sky, $lightness: 8%);
+$color-secondary:     $dark-lavender;
+$color-accent:        $dark-peach;
+$color-success:       $dark-sage;
+
+$color-border:        #2d3540;
+
+$color-text-main:     #e2e8f0;
+$color-text-muted:    #8b9bb0;
+
+$btn-disabled-bg:     #181c22;
+$btn-disabled-border: #262c36;
+$btn-disabled-text:   #4b5563;
+
+$btn-process-bg:      #2b4353;
+$btn-process-border:  #3d5d73;
+$btn-process-text:    #e2e8f0;
+
+$btn-cancel-bg:       #543d31;
+$btn-cancel-border:   #735443;
+$btn-cancel-text:     #fed7aa;
+
+$btn-remove-bg:       #4d2424;
+$btn-remove-border:   #6e3333;
+$btn-remove-text:     #fca5a5;
+
+$btn-download-bg:     #243d2c;
+$btn-download-border: #35573f;
+$btn-download-text:   #86efac;
