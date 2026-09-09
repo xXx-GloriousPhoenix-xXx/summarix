@@ -22,7 +22,8 @@
           "skipTests": true
         },
         "@schematics/angular:interceptor": {
-          "typeSeparator": "."
+          "typeSeparator": ".",
+          "skipTests": true
         },
         "@schematics/angular:directive": {
           "type": "directive",
@@ -78,7 +79,8 @@
               "buildTarget": "summarix:build:production"
             },
             "development": {
-              "buildTarget": "summarix:build:development"
+              "buildTarget": "summarix:build:development",
+              "proxyConfig": "proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"

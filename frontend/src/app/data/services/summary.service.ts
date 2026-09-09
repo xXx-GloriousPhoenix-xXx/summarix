@@ -5,8 +5,8 @@ import { finalize, pipe, Subject, takeUntil, tap } from 'rxjs';
 @Service()
 export class SummaryService {
     private readonly httpClient = inject(HttpClient);
-    private readonly baseUrl = "http://localhost:10000/api/summary";
-    private readonly isProcessing = signal<boolean>(false);
+    private readonly baseUrl = "/api/summary";
+    readonly isProcessing = signal<boolean>(false);
     private readonly cancel$ = new Subject<void>();
 
     processFile(file: File) {

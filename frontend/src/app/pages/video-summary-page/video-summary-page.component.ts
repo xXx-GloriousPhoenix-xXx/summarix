@@ -12,8 +12,9 @@ export class VideoSummaryPageComponent {
     private readonly summaryService = inject(SummaryService);
 
     protected readonly videoFile = signal<File | null>(null);
-    protected readonly isProcessing = signal<boolean>(false);
     protected readonly pdfFile = signal<File | null>(null);
+
+    protected readonly isProcessing = this.summaryService.isProcessing;
 
     protected setFiles(files: File[]) {
         if (files.at(0)) {
@@ -41,6 +42,8 @@ export class VideoSummaryPageComponent {
             return;
         }
 
+        this.pdfFile.set(null);
+
         this.summaryService.processFile(currentFile).subscribe({
             next: (response) => {
                 const contentType = response.headers.get("Content-Type");
@@ -48,8 +51,9 @@ export class VideoSummaryPageComponent {
 
                 const isPdf = contentType?.includes('application/pdf') || blob?.type === 'application/pdf';
                 if (isPdf && blob) {
-                    const fileUrl = URL.createObjectURL(blob);
-                    window.open(fileUrl);
+                    const fileName = `${currentFile.name.replace(/\.[^/.]+$/, "")}_summary.pdf`;
+                    const file = new File([blob], fileName, { type: 'application/pdf' });
+                    this.pdfFile.set(file);
                 }
                 else {
                     console.warn("Response format is not PDF");
