@@ -1,0 +1,20 @@
+@if (!isProcessing()) {
+    <section
+        appDnd
+        (filesDropped)="setFiles($event)"
+        class="drop-area"
+    >
+        <div class="action-panel">
+            <button>Process</button>
+            <button>Cancel</button>
+            <button>Remove</button>
+        </div>
+        <span>{{ files().at(0)?.name }}</span>
+    </section>
+}
+@else {
+    <section
+        class="download-area"
+    ></section>
+    <button>Download</button>
+}
