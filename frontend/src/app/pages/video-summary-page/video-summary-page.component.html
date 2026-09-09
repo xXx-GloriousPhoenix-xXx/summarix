@@ -1,0 +1,40 @@
+<input
+    #fileInput
+    type="file"
+    accept="video/*"
+    (change)="onFileSelected($event)"
+    style="display: none;"
+>
+<section
+    appDnd
+    (click)="$event.stopPropagation(); fileInput.click();"
+    (filesDropped)="setFiles($event)"
+    class="drop-area"        
+>
+    <div class="action-panel" (click)="$event.stopPropagation()">
+        <button
+            class="action-btn btn-process"
+            [class.is-loading]="isProcessing()"
+            (click)="onProcess()"
+            [disabled]="videoFile() === null || isProcessing()"
+        >
+            {{ isProcessing() ? 'Processing...' : 'Process' }}
+        </button>
+        <button
+            class="action-btn btn-cancel"
+            (click)="onCancel()"
+            [disabled]="videoFile() === null || !isProcessing()"
+        >Cancel</button>
+        <button
+            class="action-btn btn-remove"
+            (click)="onRemove()"
+            [disabled]="videoFile() === null || isProcessing()"
+        >Remove</button>
+        <button
+            class="action-btn btn-download"
+            (click)="onDownload()"
+            [disabled]="pdfFile() === null"
+        >Download</button>
+    </div>
+    <span class="file-name">{{ videoFile()?.name || "Upload video to process" }}</span>
+</section>

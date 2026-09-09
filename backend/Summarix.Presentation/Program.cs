@@ -1,8 +1,21 @@
 using Summarix.Application;
 using Summarix.Infrastructure;
+using Summarix.Presentation;
 using Summarix.Presentation.Exceptions;
 
 var builder = WebApplication.CreateBuilder(args);
+
+const string frontendCorsPolicy = "FrontendCorsPolicy";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(frontendCorsPolicy, policy =>
+    {
+        policy.WithOrigins("http://localhost:4200", "http://localhost:80", "http://localhost")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .WithExposedHeaders("Content-Disposition");
+    });
+});
 
 builder.Services.AddControllers();
 
@@ -11,6 +24,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddPresentation(builder.Configuration, builder.WebHost);
 
 var app = builder.Build();
 
@@ -25,8 +39,12 @@ if (app.Environment.IsDevelopment())
         options.RoutePrefix = string.Empty;
     });
 }
+else
+{
+    app.UseHttpsRedirection();
+}
 
-app.UseHttpsRedirection();
+app.UseCors(frontendCorsPolicy);
 app.UseAuthorization();
 app.MapControllers();
 
