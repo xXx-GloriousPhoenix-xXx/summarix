@@ -19,8 +19,20 @@ public class TextifyClient(HttpClient httpClient, IOptions<TextifySettings> opti
     {
         using var content = new MultipartFormDataContent();
 
+        var extension = Path.GetExtension(fileName).ToLowerInvariant();
+        var contentType = extension switch
+        {
+            ".mp4" => "video/mp4",
+            ".webm" => "video/webm",
+            ".mp3" => "audio/mpeg",
+            ".wav" => "audio/wav",
+            ".m4a" => "audio/mp4",
+            ".ogg" => "audio/ogg",
+            _ => "application/octet-stream"
+        };
+
         var streamContent = new StreamContent(videoStream);
-        streamContent.Headers.ContentType = new MediaTypeHeaderValue("video/mp4");
+        streamContent.Headers.ContentType = new MediaTypeHeaderValue(contentType);
         content.Add(streamContent, "media", fileName);
 
         var targetLanguage = language ?? _settings.DefaultLanguage;
