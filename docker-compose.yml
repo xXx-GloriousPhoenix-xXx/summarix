@@ -1,0 +1,49 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: summarix-frontend
+    ports:
+      - "4200:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: summarix-backend
+    ports:
+      - "10000:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - Textify__BaseUrl=http://txtify:8011
+      - Ollama__BaseUrl=http://ollama:11434
+    depends_on:
+      - txtify
+      - ollama
+    restart: unless-stopped
+
+  txtify:
+    image: lkmeta/txtify:latest
+    container_name: summarix-txtify
+    ports:
+      - "11000:8011"
+    volumes:
+      - txtify-cache:/root/.cache
+    restart: unless-stopped
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: summarix-ollama
+    ports:
+      - "12000:11434"
+    volumes:
+      - ollama-models:/root/.ollama
+    restart: unless-stopped
+
+volumes:
+  txtify-cache:
+  ollama-models:
