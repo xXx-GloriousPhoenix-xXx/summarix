@@ -20,17 +20,19 @@ public class TextifyClient(HttpClient httpClient, IOptions<TextifySettings> opti
         using var content = new MultipartFormDataContent();
 
         var streamContent = new StreamContent(videoStream);
-        streamContent.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
-        content.Add(streamContent, "file", fileName);
+        streamContent.Headers.ContentType = new MediaTypeHeaderValue("video/mp4");
+        content.Add(streamContent, "media", fileName);
 
         var targetLanguage = language ?? _settings.DefaultLanguage;
         content.Add(new StringContent(targetLanguage), "language");
         content.Add(new StringContent(_settings.Model), "model");
+        content.Add(new StringContent("none"), "translation");
+        content.Add(new StringContent("none"), "language_translation");
 
         try
         {
             using var response = await _httpClient.PostAsync(
-                "/api/transcribe",
+                "/transcribe",
                 content,
                 cancellationToken
             );
@@ -38,6 +40,15 @@ public class TextifyClient(HttpClient httpClient, IOptions<TextifySettings> opti
             if (!response.IsSuccessStatusCode)
             {
                 var errorBody = await response.Content.ReadAsStringAsync(cancellationToken);
+
+                if (errorBody.Contains("Failed to start transcription process", StringComparison.OrdinalIgnoreCase) ||
+                    errorBody.Contains("does not contain any stream", StringComparison.OrdinalIgnoreCase))
+                {
+                    throw new InvalidMediaAudioException(
+                        "The uploaded media file does not contain an audio stream or the audio track is corrupted."
+                    );
+                }
+
                 throw new TranscriptionFailedException(
                     $"Txtify error: {response.StatusCode} - {errorBody}"
                 );
@@ -46,9 +57,15 @@ public class TextifyClient(HttpClient httpClient, IOptions<TextifySettings> opti
             var responseJson = await response.Content.ReadAsStringAsync(cancellationToken);
 
             using var doc = JsonDocument.Parse(responseJson);
+
             if (doc.RootElement.TryGetProperty("text", out var textElement))
             {
                 return textElement.GetString() ?? string.Empty;
+            }
+
+            if (doc.RootElement.TryGetProperty("transcription", out var transcriptionElement))
+            {
+                return transcriptionElement.GetString() ?? string.Empty;
             }
 
             return responseJson;
