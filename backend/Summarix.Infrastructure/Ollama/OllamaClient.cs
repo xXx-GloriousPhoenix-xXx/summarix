@@ -22,10 +22,11 @@ public class OllamaClient(HttpClient httpClient, IOptions<OllamaSettings> settin
         }
 
         var systemPrompt = promptInstruction ?? _settings.DefaultSystemPrompt;
+        var userContent = $"Transcript:\n\"\"\"\n{text}\n\"\"\"\n\nPlease provide a clear summary and key takeaways.";
 
         var requestPayload = new OllamaGenerateRequest(
             Model: _settings.Model,
-            Prompt: text,
+            Prompt: userContent,
             System: systemPrompt,
             Stream: false
         );
