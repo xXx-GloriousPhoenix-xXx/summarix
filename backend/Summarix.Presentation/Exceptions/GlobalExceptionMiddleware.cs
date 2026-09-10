@@ -42,6 +42,7 @@ public class GlobalExceptionMiddleware(RequestDelegate next, ILogger<GlobalExcep
 
         var (statusCode, title) = exception switch
         {
+            InvalidMediaAudioException => (HttpStatusCode.BadRequest, "Invalid Media Audio"),
             InvalidVideoSourceException => (HttpStatusCode.BadRequest, "Invalid Video Source"),
             TranscriptionFailedException => (HttpStatusCode.BadGateway, "Transcription Service Failed"),
             SummarizationFailedException => (HttpStatusCode.BadGateway, "Summarization Service Failed"),
