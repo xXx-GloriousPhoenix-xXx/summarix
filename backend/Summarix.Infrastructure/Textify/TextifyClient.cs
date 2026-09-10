@@ -40,6 +40,15 @@ public class TextifyClient(HttpClient httpClient, IOptions<TextifySettings> opti
             if (!response.IsSuccessStatusCode)
             {
                 var errorBody = await response.Content.ReadAsStringAsync(cancellationToken);
+
+                if (errorBody.Contains("Failed to start transcription process", StringComparison.OrdinalIgnoreCase) ||
+                    errorBody.Contains("does not contain any stream", StringComparison.OrdinalIgnoreCase))
+                {
+                    throw new InvalidMediaAudioException(
+                        "The uploaded media file does not contain an audio stream or the audio track is corrupted."
+                    );
+                }
+
                 throw new TranscriptionFailedException(
                     $"Txtify error: {response.StatusCode} - {errorBody}"
                 );
