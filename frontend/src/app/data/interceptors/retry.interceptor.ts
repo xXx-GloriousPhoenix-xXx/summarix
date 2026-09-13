@@ -9,6 +9,10 @@ const RETRYABLE_STATUS_CODES = [
   ];
 
 export const retryInterceptor: HttpInterceptorFn = (req, next) => {
+    if (req.url.includes('/summary/generate') || req.method === 'POST') {
+        return next(req);
+    }
+
     return next(req).pipe(
         retry({
             count: 2,
