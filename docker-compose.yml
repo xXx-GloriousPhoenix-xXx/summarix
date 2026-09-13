@@ -33,6 +33,13 @@ services:
       - "11000:8011"
     volumes:
       - txtify-cache:/root/.cache
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
     restart: unless-stopped
 
   ollama:
@@ -42,6 +49,13 @@ services:
       - "12000:11434"
     volumes:
       - ollama-models:/root/.ollama
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
     restart: unless-stopped
 
 volumes:

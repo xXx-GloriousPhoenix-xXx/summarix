@@ -77,7 +77,21 @@ export class VideoSummaryPageComponent {
     }
 
     protected onDownload() {
+        const file = this.pdfFile();
+        if (!file) {
+            return;
+        }
 
+        const url = URL.createObjectURL(file);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = file.name || 'summary.pdf';
+        
+        document.body.appendChild(link);
+        link.click();
+        
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
     }
 
     protected onFileSelected(event: Event) {

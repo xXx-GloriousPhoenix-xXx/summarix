@@ -6,7 +6,7 @@ public class VideoSource
 {
     private static readonly HashSet<string> AllowedExtensions = new(StringComparer.OrdinalIgnoreCase)
     {
-        ".mp4", ".mov", ".mkv", ".avi", ".webm", ".wav", ".mp3"
+        ".mp4", ".mp3", ".wav", ".m4a", ".ogg", ".flac", ".aac"
     };
 
     public string FileName { get; }
